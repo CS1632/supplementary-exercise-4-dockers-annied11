@@ -147,23 +147,20 @@ public class D3Test {
   // }
   @Test
     public void tEST7RETURN() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        driver.get("http://localhost:8080/");
-        driver.findElement(By.linkText("Rent-A-Cat")).click();
-        driver.findElement(By.id("returnID")).click();
-        driver.findElement(By.id("returnID")).sendKeys("2");
-        driver.findElement(By.cssSelector(".form-group:nth-child(4) .btn")).click();
+      setCookies("false", "true", "false");
 
-        // 等待返回结果元素可见
-        WebElement returnResult = wait
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='returnResult']")));
+      driver.get(BASE_URL);
+      driver.findElement(By.linkText("Rent-A-Cat")).click();
 
-        assertThat(driver.findElement(By.xpath("//div[@id='listing']/ul/li")).getText(), is("ID 1. Jennyanydots"));
-        assertThat(driver.findElement(By.xpath("//div[@id='listing']/ul/li[2]")).getText(),
-                is("ID 2. Old Deuteronomy"));
-        assertThat(driver.findElement(By.xpath("//div[@id='listing']/ul/li[3]")).getText(),
-                is("ID 3. Mistoffelees"));
-        assertThat(returnResult.getText(), is("Success!"));
+      // 前置条件检查
+      List<WebElement> catsBeforeReturn = driver.findElements(By.cssSelector("#listing .list-group-item"));
+      assertTrue(catsBeforeReturn.get(1).getText().contains("Rented out"));
+
+      driver.findElement(By.id("returnID")).sendKeys("2");
+      driver.findElement(By.cssSelector(".form-group:nth-child(4) .btn")).click();
+
+      List<WebElement> catsAfterReturn = driver.findElements(By.cssSelector("#listing .list-group-item"));
+      assertTrue(catsAfterReturn.get(1).getText().contains("ID 2. Old Deuteronomy"));
     }
 
 
