@@ -52,6 +52,14 @@ public class D3Test {
     public void tearDown() {
         driver.quit();
     }
+
+    private void setCookies(String... cookieValues) {
+      driver.get(BASE_URL); // 使用BASE_URL
+      for (int i = 0; i < cookieValues.length; i++) {
+          Cookie newCookie = new Cookie(String.valueOf(i + 1), cookieValues[i]);
+          driver.manage().addCookie(newCookie);
+      }
+  }
   @Test
   public void tEST1LINKS() {
     driver.get("http://localhost:8080/");
